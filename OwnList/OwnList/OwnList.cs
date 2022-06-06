@@ -198,9 +198,13 @@ namespace OwnList
         public IEnumerator<T> GetEnumerator()
         {
             // Actually it returns the 'List' elements and not contains the 'empty values' caused by Resizing (capacity increasing).
-            T[] temp = new T[_size];
+            /*T[] temp = new T[_size];
             Array.Copy(_elements, temp, _size);
-            return new Enumerator(temp);
+            return new Enumerator(temp);*/
+            for (int i = 0; i < _elements.Length; i++)
+            {
+                yield return _elements[i];
+            }
         }
 
         /// <summary>
@@ -212,83 +216,6 @@ namespace OwnList
             Array.Copy(_elements, newArray, _elements.Length);
             _elements = newArray;
             _capacity = _elements.Length;
-        }
-
-        /// <summary>
-        /// The list enumerator.
-        /// </summary>
-        public class Enumerator : IEnumerator<T>
-        {
-            /// <summary>
-            /// An indexating array.
-            /// </summary>
-            private T[] _elements;
-
-            /// <summary>
-            /// Current position.
-            /// </summary>
-            private int _position = -1;
-
-            public Enumerator(T[] elements)
-            {
-                _elements = elements;
-            }
-
-            /// <summary>
-            /// Gets current element.
-            /// </summary>
-            /// <value>
-            /// Current element of the enumerable.
-            /// </value>
-            public T Current
-            {
-                get
-                {
-                    if (_position >= _elements.Length && _position == -1)
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    return _elements[_position];
-                }
-            }
-
-            /// <summary>
-            /// Gets current element of the collection.
-            /// </summary>
-            /// <value>
-            /// Current element of the collection.
-            /// </value>
-            object IEnumerator.Current
-            {
-                get { return Current; }
-            }
-
-            public void Dispose()
-            {
-            }
-
-            /// <summary>
-            /// Moves to next element of collection.
-            /// </summary>
-            /// <returns>Whether we have next element or not.</returns>
-            public bool MoveNext()
-            {
-                if (_position < _elements.Length - 1)
-                {
-                    _position++;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            public void Reset()
-            {
-                _position = -1;
-            }
         }
     }
 }
